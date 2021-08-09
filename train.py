@@ -23,7 +23,7 @@ import random
 import argparse
 
 from models import create_se_convlstm_model
-from validation_generator import DataGeneratorMultipleInput
+from data_generators import DataGeneratorMultipleInput
 
 if __name__ == '__main__':
 
