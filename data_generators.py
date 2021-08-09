@@ -1,6 +1,11 @@
 import numpy as np
 from tensorflow.keras.utils import Sequence
+import sys
+
+import hashlib
+import os
 import glob
+import random
 
 def is_training(file_name):
     file_name = os.path.basename(file_name)
