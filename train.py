@@ -2,7 +2,6 @@
 # coding: utf-8
 
 
-
 import aedat
 import tensorflow as tf
 from tensorflow import keras
@@ -156,7 +155,7 @@ if __name__ == '__main__':
 
 	print(FRAMES_DATA_FOLDER)
 
-	model = create_model(args.n_frames)
+	model = create_se_convlstm_model(args.n_frames)
 	model.compile(
 		loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
 	)
