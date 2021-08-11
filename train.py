@@ -54,7 +54,7 @@ if __name__ == '__main__':
 	# Define some callbacks to improve training.
 	early_stopping = keras.callbacks.EarlyStopping(monitor="val_loss", patience=10)
 	reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=5)
-	model_checkpoint = keras.callbacks.ModelCheckpoint('Model_se_conv_lstm.h5', save_best_only=True)
+	model_checkpoint = keras.callbacks.ModelCheckpoint(f'Model_{args.model}.h5', save_best_only=True)
 
 	# Define modifiable training hyperparameters.
 	epochs = 5
