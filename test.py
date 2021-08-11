@@ -62,26 +62,26 @@ def caluclate_accuracy(files_list, model, n_frames=3):
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument('data_folder')
-	parser.add_argument('--n_frames', type=int, default=3)
-	parser.add_argument('--model')
+    parser = argparse.ArgumentParser()
+    parser.add_argument('data_folder')
+    parser.add_argument('--n_frames', type=int, default=3)
+    parser.add_argument('--model')
     parser.add_argument('--model_path')
 
-	args = parser.parse_args()
-	FRAMES_DATA_FOLDER = args.data_folder
+    args = parser.parse_args()
+    FRAMES_DATA_FOLDER = args.data_folder
 
-	files_list = [file for file in glob.glob(os.path.join(FRAMES_DATA_FOLDER, '*\\*.npy')) if is_training(file) == False]
+    files_list = [file for file in glob.glob(os.path.join(FRAMES_DATA_FOLDER, '*\\*.npy')) if is_training(file) == False]
 
-	if args.model == 'se':
-		model = create_se_convlstm_model(args.n_frames)
-	elif args.model == 'vanilla':
-		model = create_vanilla(args.n_frames)
+    if args.model == 'se':
+        model = create_se_convlstm_model(args.n_frames)
+    elif args.model == 'vanilla':
+        model = create_vanilla(args.n_frames)
 
 
-	model.load_weights(args.model_path)
+    model.load_weights(args.model_path)
 
-	print('loaded the model')
+    print('loaded the model')
 
     accs = caluclate_accuracy(files_list, model, n_frames=3)
 
