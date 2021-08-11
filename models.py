@@ -68,3 +68,36 @@ def create_se_convlstm_model(n_frames=3):
 
 	model = keras.models.Model(inputs, outputs)
 	return model
+
+
+class DepthMaxPooling(layers.Layer):
+
+    def call(self, input_tensor):
+        #result = tf.concat([])
+        result = tf.reduce_max(input_tensor, -1, keepdims=True)
+        return tf.concat([result, result, result], -1)
+
+def create_vanilla():
+
+    base_model = tf.keras.applications.xception.Xception(include_top=False)
+    model_1 = tf.keras.Sequential([
+        DepthMaxPooling(),
+        base_model,
+        tf.keras.layers.GlobalAveragePooling2D(),
+        tf.keras.layers.Dense(10, activation='softmax')
+    ])
+
+    inp_1 = layers.Input(shape=(260, 346, 3))
+    inp_2 = layers.Input(shape=(260, 346, 3))
+    inp_3 = layers.Input(shape=(260, 346, 3))
+
+    x = tf.keras.backend.concatenate(
+        [inp_1, inp_2, inp_3],
+        axis=-1
+    )
+
+    x = model_1(x)
+
+    model = tf.keras.models.Model([inp_1, inp_2, inp_3], x)
+    
+    return model

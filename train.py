@@ -30,12 +30,18 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('data_folder')
 	parser.add_argument('--n_frames', type=int, default=3)
+	parser.add_argument('--model')
 	args = parser.parse_args()
 	FRAMES_DATA_FOLDER = args.data_folder
 
 	print(FRAMES_DATA_FOLDER)
 
-	model = create_se_convlstm_model(args.n_frames)
+	if args.model == 'se':
+		model = create_se_convlstm_model(args.n_frames)
+	elif args.model == 'vanilla':
+		model = create_se_convlstm_model(args.n_frames)
+	
+
 	model.compile(
 		loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
 	)
