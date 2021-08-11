@@ -9,7 +9,7 @@ from tensorflow.keras import layers
 import numpy as np
 
 import sys
-
+from tqdm import tqdm
 import hashlib
 import os
 import glob
