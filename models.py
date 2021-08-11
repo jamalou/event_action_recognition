@@ -96,6 +96,6 @@ def create_vanilla(n_frames=3):
 
     x = model_1(x)
 
-    model = tf.keras.models.Model([inp_1, inp_2, inp_3], x)
+    model = tf.keras.models.Model(inputs, x)
 
     return model
