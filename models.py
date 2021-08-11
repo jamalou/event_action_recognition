@@ -77,7 +77,7 @@ class DepthMaxPooling(layers.Layer):
         result = tf.reduce_max(input_tensor, -1, keepdims=True)
         return tf.concat([result, result, result], -1)
 
-def create_vanilla():
+def create_vanilla(n_frames=3):
 
     base_model = tf.keras.applications.xception.Xception(include_top=False)
     model_1 = tf.keras.Sequential([

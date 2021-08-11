@@ -39,7 +39,7 @@ if __name__ == '__main__':
 	if args.model == 'se':
 		model = create_se_convlstm_model(args.n_frames)
 	elif args.model == 'vanilla':
-		model = create_vanilla()
+		model = create_vanilla(args.n_frames)
 
 
 	model.compile(
