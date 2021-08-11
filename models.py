@@ -87,17 +87,15 @@ def create_vanilla():
         tf.keras.layers.Dense(10, activation='softmax')
     ])
 
-    inp_1 = layers.Input(shape=(260, 346, 3))
-    inp_2 = layers.Input(shape=(260, 346, 3))
-    inp_3 = layers.Input(shape=(260, 346, 3))
+    inputs = [layers.Input(shape=(260, 346, 3)) for _ in range(n_frames)]
 
     x = tf.keras.backend.concatenate(
-        [inp_1, inp_2, inp_3],
+        inputs,
         axis=-1
     )
 
     x = model_1(x)
 
     model = tf.keras.models.Model([inp_1, inp_2, inp_3], x)
-    
+
     return model
