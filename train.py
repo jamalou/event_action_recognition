@@ -22,7 +22,7 @@ import random
 
 import argparse
 
-from models import create_se_convlstm_model
+from models import create_se_convlstm_model, create_vanilla
 from data_generators import DataGeneratorMultipleInput
 
 if __name__ == '__main__':
@@ -39,8 +39,8 @@ if __name__ == '__main__':
 	if args.model == 'se':
 		model = create_se_convlstm_model(args.n_frames)
 	elif args.model == 'vanilla':
-		model = create_se_convlstm_model(args.n_frames)
-	
+		model = create_vanilla()
+
 
 	model.compile(
 		loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
