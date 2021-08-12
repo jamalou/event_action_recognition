@@ -31,7 +31,7 @@ if __name__ == '__main__':
 	parser.add_argument('data_folder')
 	parser.add_argument('--n_frames', type=int, default=3)
 	parser.add_argument('--model')
-	parser.add_argument('--batch_size')
+	parser.add_argument('--batch_size', type=int, default=2)
 	args = parser.parse_args()
 	FRAMES_DATA_FOLDER = args.data_folder
 
