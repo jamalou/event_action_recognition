@@ -31,6 +31,7 @@ if __name__ == '__main__':
 	parser.add_argument('data_folder')
 	parser.add_argument('--n_frames', type=int, default=3)
 	parser.add_argument('--model')
+	parser.add_argument('--batch_size')
 	args = parser.parse_args()
 	FRAMES_DATA_FOLDER = args.data_folder
 
@@ -43,14 +44,15 @@ if __name__ == '__main__':
 
 
 	model.compile(
-		loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
+		loss=keras.losses.categorical_crossentropy,
+		optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
 	)
 
 	print('created the model')
 
 
-	training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=2, n_frames=args.n_frames)
-	validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=2, n_frames=args.n_frames)
+	training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
+	validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 	# Define some callbacks to improve training.
 	early_stopping = keras.callbacks.EarlyStopping(monitor="val_loss", patience=10)
 	reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=5)
