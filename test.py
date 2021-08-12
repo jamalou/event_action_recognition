@@ -71,7 +71,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     FRAMES_DATA_FOLDER = args.data_folder
 
-    files_list = [file for file in glob.glob(os.path.join(FRAMES_DATA_FOLDER, '*\\*.npy')) if is_training(file) == False]
+    files_list = [file for file in glob.glob(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy')) if is_training(file) == False]
 
     if args.model == 'se':
         model = create_se_convlstm_model(args.n_frames)
