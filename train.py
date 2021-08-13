@@ -61,8 +61,6 @@ if __name__ == '__main__':
     print('created the model')
 
 
-	training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
-	validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 	# Define some callbacks to improve training.
 	early_stopping = keras.callbacks.EarlyStopping(monitor="val_loss", patience=10)
 	reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=5)
