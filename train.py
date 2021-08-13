@@ -61,16 +61,16 @@ if __name__ == '__main__':
     print('created the model')
 
 
-	# Define some callbacks to improve training.
-	early_stopping = keras.callbacks.EarlyStopping(monitor="val_loss", patience=10)
-	reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=5)
-	model_checkpoint = keras.callbacks.ModelCheckpoint(f'Model_{args.model}.h5', save_best_only=True)
+    # Define some callbacks to improve training.
+    early_stopping = keras.callbacks.EarlyStopping(monitor="val_loss", patience=10)
+    reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor="val_loss", patience=5)
+    model_checkpoint = keras.callbacks.ModelCheckpoint(f'Model_{args.model}.h5', save_best_only=True)
 
-	# Define modifiable training hyperparameters.
-	epochs = args.epochs
+    # Define modifiable training hyperparameters.
+    epochs = args.epochs
 
-	hist = model.fit(training_generator, validation_data=validation_generator, workers=4,
-					 epochs=epochs, callbacks=[early_stopping, reduce_lr, model_checkpoint], use_multiprocessing=True)
+    hist = model.fit(training_generator, validation_data=validation_generator, workers=4,
+                     epochs=epochs, callbacks=[early_stopping, reduce_lr, model_checkpoint], use_multiprocessing=True)
 
 
-	model.save('Model_final.h5')
+    model.save('Model_final.h5')
