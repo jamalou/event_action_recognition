@@ -22,33 +22,43 @@ import random
 
 import argparse
 
-from models import create_se_convlstm_model, create_vanilla
-from data_generators import DataGeneratorMultipleInput
+from models import create_se_convlstm_model, create_vanilla, create_convlstm_model
+from data_generators import DataGeneratorMultipleInput, DataGeneratorSingleInput
 
 if __name__ == '__main__':
 
-	parser = argparse.ArgumentParser()
-	parser.add_argument('data_folder')
-	parser.add_argument('--n_frames', type=int, default=3)
-	parser.add_argument('--model')
-	parser.add_argument('--batch_size', type=int, default=2)
-	args = parser.parse_args()
-	FRAMES_DATA_FOLDER = args.data_folder
+    parser = argparse.ArgumentParser()
+    parser.add_argument('data_folder')
+    parser.add_argument('--n_frames', type=int, default=3)
+    parser.add_argument('--model')
+    parser.add_argument('--batch_size', type=int, default=2)
+    parser.add_argument('--epochs', type=int, default=5)
+    args = parser.parse_args()
+    FRAMES_DATA_FOLDER = args.data_folder
 
-	print(FRAMES_DATA_FOLDER)
+    print(FRAMES_DATA_FOLDER)
 
-	if args.model == 'se':
-		model = create_se_convlstm_model(args.n_frames)
-	elif args.model == 'vanilla':
-		model = create_vanilla(args.n_frames)
+    if args.model == 'se':
+        model = create_se_convlstm_model(args.n_frames)
+        training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
+        validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
+    elif args.model == 'vanilla':
+        model = create_vanilla(args.n_frames)
+        training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
+        validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
-	model.compile(
-		loss=keras.losses.categorical_crossentropy,
-		optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
-	)
+    elif args.model == 'clstm':
+        model = create_convlstm_model(args.n_frames)
+        training_generator   = DataGeneratorSingleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
+        validation_generator = DataGeneratorSingleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
-	print('created the model')
+    model.compile(
+        loss=keras.losses.categorical_crossentropy,
+        optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
+    )
+
+    print('created the model')
 
 
 	training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
@@ -59,7 +69,7 @@ if __name__ == '__main__':
 	model_checkpoint = keras.callbacks.ModelCheckpoint(f'Model_{args.model}.h5', save_best_only=True)
 
 	# Define modifiable training hyperparameters.
-	epochs = 5
+	epochs = args.epochs
 
 	hist = model.fit(training_generator, validation_data=validation_generator, workers=4,
 					 epochs=epochs, callbacks=[early_stopping, reduce_lr, model_checkpoint], use_multiprocessing=True)

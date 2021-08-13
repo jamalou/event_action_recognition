@@ -99,3 +99,31 @@ def create_vanilla(n_frames=3):
     model = tf.keras.models.Model(inputs, x)
 
     return model
+
+
+def create_convlstm_model(n_frames=3):
+    input_ = layers.Input(shape=(n_frames, 260, 346, 3))
+
+    X = layers.ConvLSTM2D(
+        filters=64,
+        kernel_size=(5, 5),
+        padding="same",
+        return_sequences=True,
+        activation="relu",
+    )(input_)
+
+    X = layers.BatchNormalization()(X)
+
+    X = layers.Conv3D(
+        filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same"
+    )(X)
+
+    X = layers.GlobalAveragePooling3D()(X)
+    X = layers.Dense(units=512, activation="relu")(X)
+    X = layers.Dropout(0.3)(X)
+
+    outputs = layers.Dense(units=10, activation="softmax")(X)
+    # Next, we will build the complete model and compile it."""
+
+    model = keras.models.Model(input_, outputs)
+    return model
