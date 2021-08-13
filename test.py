@@ -17,7 +17,7 @@ import random
 
 import argparse
 
-from models import create_se_convlstm_model, create_vanilla
+from models import create_se_convlstm_model, create_vanilla, create_convlstm_model
 
 def is_training(file_name):
     file_name = os.path.basename(file_name)
@@ -77,7 +77,8 @@ if __name__ == '__main__':
         model = create_se_convlstm_model(args.n_frames)
     elif args.model == 'vanilla':
         model = create_vanilla(args.n_frames)
-
+    elif args.model == 'vanilla':
+        model = create_convlstm_model(args.n_frames)
 
     model.load_weights(args.model_path)
 
