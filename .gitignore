@@ -1,6 +1,12 @@
 #Data files
 data/*
 
+#models
+*.h5
+
+#notebooks
+*.ipynb
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
