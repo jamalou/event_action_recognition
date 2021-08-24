@@ -27,16 +27,18 @@ def is_training(file_name):
     return simple_hash>250
 
 
-def predict_file(file_path, model, n_frames=3):
+def predict_file(file_path, model, n_frames=3, model_name='vanilla'):
     video = np.load(file_path)
     #print(video.shape)
     video = video[:n_frames*(len(video)//n_frames)]
     #print(video.shape)
+    if model_name != 'clstm':
+        inputs = []
 
-    inputs = []
-
-    for i in range(n_frames):
-        inputs.append(video[i::n_frames])
+        for i in range(n_frames):
+            inputs.append(video[i::n_frames])
+    else:
+        inputs = video.reshape(len(video)//n_frames, n_frames, *video.shape[1:])
 
     #print(file_path, len(inputs), inputs[0].shape)
     results = model.predict(inputs)
@@ -44,8 +46,8 @@ def predict_file(file_path, model, n_frames=3):
     return results.argmax()
 
 
-def get_acc(file_path, model, n_frames=3):
-    pred = predict_file(file_path, model, n_frames)
+def get_acc(file_path, model, n_frames=3, model_name='vanilla'):
+    pred = predict_file(file_path, model, n_frames, model_name)
 
     base = os.path.basename(file_path)
     class_ = int(base.split('.')[0].split('_')[-1]) - 1
@@ -53,10 +55,10 @@ def get_acc(file_path, model, n_frames=3):
     return pred == class_
 
 
-def caluclate_accuracy(files_list, model, n_frames=3):
+def caluclate_accuracy(files_list, model, n_frames=3, model_name='vanilla'):
     preds = []
     for  file_path in tqdm(files_list):
-        preds.append(get_acc(file_path, model,n_frames))
+        preds.append(get_acc(file_path, model, n_frames, model_name))
 
     return preds
 
@@ -77,13 +79,13 @@ if __name__ == '__main__':
         model = create_se_convlstm_model(args.n_frames)
     elif args.model == 'vanilla':
         model = create_vanilla(args.n_frames)
-    elif args.model == 'vanilla':
+    elif args.model == 'clstm':
         model = create_convlstm_model(args.n_frames)
 
     model.load_weights(args.model_path)
 
     print('loaded the model')
 
-    accs = caluclate_accuracy(files_list, model, n_frames=3)
+    accs = caluclate_accuracy(files_list, model, n_frames=args.n_frames, model_name=args.model)
 
     print('model accuracy is {}'.format(sum(accs)/len(accs)))
