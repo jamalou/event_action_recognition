@@ -33,12 +33,52 @@ def cnn_multiple_images(inputs, n_filters, se_ratio=16):
     return X
 
 
+def submodel_multiple_images(inputs):
+
+    submodel = tf.keras.applications.Xception(include_top=False, weights="imagenet")
+    submodel.trainable = False
+    X = [submodel(inp) for inp in inputs]
+
+    return X
+
+
+def create_xception_convlstm_model(n_frames=3):
+
+    inputs = [layers.Input(shape=(260, 346, 3)) for _ in range(n_frames)]
+
+    X = submodel_multiple_images(inputs)
+
+    X = tf.keras.backend.stack(
+        X,
+        axis=-1
+    )
+
+    X = layers.ConvLSTM2D(
+        filters=64,
+        kernel_size=(5, 5),
+        padding="same",
+        return_sequences=True,
+        activation="relu",
+    )(X)
+
+    X = layers.BatchNormalization()(X)
+
+    X = layers.Conv3D(
+        filters=1, kernel_size=(3, 3, 3), activation="sigmoid", padding="same"
+    )(X)
+
+    X = layers.GlobalAveragePooling3D()(X)
+    X = layers.Dense(units=512, activation="relu")(X)
+    X = layers.Dropout(0.3)(X)
+
+    outputs = layers.Dense(units=10, activation="softmax")(X)
+    # Next, we will build the complete model and compile it."""
+
+    model = keras.models.Model(inputs, outputs)
+
 def create_se_convlstm_model(n_frames=3):
 	inputs = [layers.Input(shape=(260, 346, 3)) for _ in range(n_frames)]
 	X = cnn_multiple_images(inputs, n_filters=16, se_ratio=16)
-
-	#x_1, x_2, x_3 = cnn_multiple_images(x_1, x_2, x_3, n_filters=32, se_ratio=16)
-	#x = layers.Concatenate()([x_1, x_2, x_3])
 
 	X = tf.keras.backend.stack(
 		X,
