@@ -22,7 +22,7 @@ import random
 
 import argparse
 
-from models import create_se_convlstm_model, create_vanilla, create_convlstm_model
+import models #import create_se_convlstm_model, create_vanilla, create_convlstm_model, create_xception_convlstm_model
 from data_generators import DataGeneratorMultipleInput, DataGeneratorSingleInput
 
 if __name__ == '__main__':
@@ -39,17 +39,21 @@ if __name__ == '__main__':
     print(FRAMES_DATA_FOLDER)
 
     if args.model == 'se':
-        model = create_se_convlstm_model(args.n_frames)
+        model = models.create_se_convlstm_model(args.n_frames)
+        training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
+        validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
+    elif args.model == 'xlstm':
+        model = models.create_xception_convlstm_model(args.n_frames)
         training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
         validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
     elif args.model == 'vanilla':
-        model = create_vanilla(args.n_frames)
+        model = models.create_vanilla(args.n_frames)
         training_generator   = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
         validation_generator = DataGeneratorMultipleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
     elif args.model == 'clstm':
-        model = create_convlstm_model(args.n_frames)
+        model = models.create_convlstm_model(args.n_frames)
         training_generator   = DataGeneratorSingleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=True, batch_size=args.batch_size, n_frames=args.n_frames)
         validation_generator = DataGeneratorSingleInput(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy'), is_train=False, batch_size=args.batch_size, n_frames=args.n_frames)
 
