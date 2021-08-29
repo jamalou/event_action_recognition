@@ -17,7 +17,7 @@ import random
 
 import argparse
 
-from models import create_se_convlstm_model, create_vanilla, create_convlstm_model
+import models #import create_se_convlstm_model, create_vanilla, create_convlstm_model
 
 def is_training(file_name):
     file_name = os.path.basename(file_name)
@@ -76,11 +76,13 @@ if __name__ == '__main__':
     files_list = [file for file in glob.glob(os.path.join(FRAMES_DATA_FOLDER, '*', '*.npy')) if is_training(file) == False]
 
     if args.model == 'se':
-        model = create_se_convlstm_model(args.n_frames)
+        model = models.create_se_convlstm_model(args.n_frames)
     elif args.model == 'vanilla':
-        model = create_vanilla(args.n_frames)
+        model = models.create_vanilla(args.n_frames)
     elif args.model == 'clstm':
-        model = create_convlstm_model(args.n_frames)
+        model = models.create_convlstm_model(args.n_frames)
+    elif args.model == 'xlstm':
+        model = models.create_xception_convlstm_model(args.n_frames)
 
     model.load_weights(args.model_path)
 

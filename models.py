@@ -75,6 +75,8 @@ def create_xception_convlstm_model(n_frames=3):
     # Next, we will build the complete model and compile it."""
 
     model = keras.models.Model(inputs, outputs)
+    
+    return model
 
 def create_se_convlstm_model(n_frames=3):
 	inputs = [layers.Input(shape=(260, 346, 3)) for _ in range(n_frames)]
