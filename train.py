@@ -74,7 +74,7 @@ if __name__ == '__main__':
     epochs = args.epochs
 
     hist = model.fit(training_generator, validation_data=validation_generator, workers=4,
-                     epochs=epochs, callbacks=[early_stopping, reduce_lr, model_checkpoint], use_multiprocessing=True)
+                     epochs=epochs, callbacks=[early_stopping, reduce_lr, model_checkpoint], use_multiprocessing=False)
 
 
     model.save('Model_final.h5')
