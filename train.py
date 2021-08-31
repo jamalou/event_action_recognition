@@ -33,6 +33,7 @@ if __name__ == '__main__':
     parser.add_argument('--model')
     parser.add_argument('--batch_size', type=int, default=2)
     parser.add_argument('--epochs', type=int, default=5)
+    parser.add_argument('--lr', type=float, default=1e-5)
     args = parser.parse_args()
     FRAMES_DATA_FOLDER = args.data_folder
 
@@ -59,7 +60,7 @@ if __name__ == '__main__':
 
     model.compile(
         loss=keras.losses.categorical_crossentropy,
-        optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
+        optimizer=keras.optimizers.RMSprop(learning_rate=args.lr),
         metrics=[keras.metrics.CategoricalAccuracy()]
     )
 
