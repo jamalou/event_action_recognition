@@ -60,6 +60,7 @@ if __name__ == '__main__':
     model.compile(
         loss=keras.losses.categorical_crossentropy,
         optimizer=keras.optimizers.RMSprop(learning_rate=0.0001),
+        metrics=[keras.metrics.CategoricalAccuracy()]
     )
 
     print('created the model')
